@@ -49,7 +49,7 @@ module.exports = class EventSub extends EventEmitter {
     if (packet.metadata.message_type == 'session_welcome') {
       this.id = packet.payload.session.id;
       require("../channels.json").channels.forEach(async id => {
-        await this.subscribe('stream.online', '1', { broadcaster_user_id: id });
+        await this.subscribe('stream.online', '1', { broadcaster_user_id: id.t });
       });
     }
 
@@ -59,7 +59,7 @@ module.exports = class EventSub extends EventEmitter {
 
     switch (packet.metadata?.subscription_type) {
       case 'channel.online':
-        this.emit('online', packet.payload.event);
+        this.emit('live', packet.payload.event);
         break;
     }
   }
