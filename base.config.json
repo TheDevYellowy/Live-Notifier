@@ -7,6 +7,7 @@
   },
   "discord": {
     "token": "",
-    "channel_id": ""
+    "channel_id": "",
+    "client_id": ""
   }
 }

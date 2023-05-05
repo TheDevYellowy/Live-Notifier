@@ -80,9 +80,9 @@ module.exports = class EventSub extends EventEmitter {
 
     let res = await post('eventsub/subscriptions', headers, body);
 
-    if (typeof res == 'string') return console.log(res);
+    if (typeof res == 'string') { console.log(res); return false; }
     else if (res.status == 200) return true;
-    else return console.log(await res.json())
+    else { console.log(await res.json()); return false; }
   }
 
   debug(msg) {

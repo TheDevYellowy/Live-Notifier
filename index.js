@@ -1,9 +1,9 @@
 const Client = require('./classes/Client');
 const client = new Client();
-const channels = require('./channels.json');
 const { User, EmbedBuilder, TextChannel } = require('discord.js');
 
 client.eventSub.on('live', async event => {
+  const channels = require('./channels.json')
   const username = event.broadcaster_user_name;
   const userId = event.broadcaster_user_id;
   const url = `https://twitch.tv/${username}`;
@@ -12,7 +12,7 @@ client.eventSub.on('live', async event => {
   data = data?.data[0];
   if (!data) return;
   let title = data.title;
-  
+
   /** @type {?User} */
   let user;
   for (const pair of channels.channels) {
