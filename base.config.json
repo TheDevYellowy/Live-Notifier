@@ -1,0 +1,12 @@
+{
+  "twitch": {
+    "client_id": "",
+    "client_secret": "",
+    "access_token": "",
+    "expires_in": 0
+  },
+  "discord": {
+    "token": "",
+    "channel_id": ""
+  }
+}
