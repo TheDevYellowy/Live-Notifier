@@ -28,7 +28,8 @@ module.exports = class LiveNotifier extends Client {
       }
 
       this.commands.set(props.name, props);
-      await this.REST.post(Routes.applicationCommands(this.config.client_id), { body: props });
+      const data = props.toJSON();
+      await this.REST.post(Routes.applicationCommands(this.config.client_id), { body: data });
 
       return false
     } catch (e) {

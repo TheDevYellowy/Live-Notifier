@@ -6,6 +6,7 @@ const { post } = require('./api');
 
 module.exports = class EventSub extends EventEmitter {
   constructor() {
+    super();
     /** @type {?WebSocket} */
     this.connection = null;
     this.connectedAt = null;

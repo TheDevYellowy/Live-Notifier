@@ -7,4 +7,12 @@ module.exports = class Command {
     this.name = name;
     this.description = description;
   }
+
+  toJSON() {
+    let name = this.name;
+    let description = this.description;
+    return {
+      name, description
+    }
+  }
 }
