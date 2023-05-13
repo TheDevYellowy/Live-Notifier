@@ -9,6 +9,7 @@ module.exports = class {
 
   async run() {
     this.client.user.setActivity({
+      name: 'Shit',
       type: ActivityType.Streaming,
       url: `https://twitch.tv/yellowyttv`
     });
