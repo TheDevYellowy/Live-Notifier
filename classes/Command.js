@@ -1,18 +1,17 @@
 module.exports = class Command {
   constructor(client, {
     name = null,
-    description = null
+    description = null,
+    options = Array(),
   }) {
-    this.client = client;
     this.name = name;
     this.description = description;
+    this.options = options;
   }
 
   toJSON() {
-    let name = this.name;
-    let description = this.description;
     return {
-      name, description
+      ...this
     }
   }
 }

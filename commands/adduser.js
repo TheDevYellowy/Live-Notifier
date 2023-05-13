@@ -5,7 +5,8 @@ module.exports = class command extends Command {
   constructor(client) {
     super(client, {
       name: 'adduser',
-      description: 'Add a user to the list of people'
+      description: 'Add a user to the list of people',
+      options: [],
     });
     this.client = client;
   }

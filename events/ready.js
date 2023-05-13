@@ -8,5 +8,7 @@ module.exports = class {
       type: 'STREAMING',
       url: `https://twitch.tv/yellowyttv`
     });
+
+    console.log(`${this.client.user.username} is online and ready`);
   }
 }
