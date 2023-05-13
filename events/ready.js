@@ -1,11 +1,15 @@
+const { ActivityType } = require('discord.js');
+const Client = require('../classes/Client');
+
 module.exports = class {
   constructor(client) {
+    /** @type {Client} */
     this.client = client;
   }
 
   async run() {
-    this.client.user.setActivity('Shit', {
-      type: 'STREAMING',
+    this.client.user.setActivity({
+      type: ActivityType.Streaming,
       url: `https://twitch.tv/yellowyttv`
     });
 
