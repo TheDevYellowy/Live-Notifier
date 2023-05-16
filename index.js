@@ -1,3 +1,5 @@
+console.clear();
+
 const Client = require('./classes/Client');
 const client = new Client();
 const { User, EmbedBuilder, TextChannel } = require('discord.js');
@@ -11,7 +13,7 @@ client.eventSub.on('live', async event => {
   const userId = event.broadcaster_user_id;
   const url = `https://twitch.tv/${username}`;
 
-  var data = await client.api.get(`channels?broadcaster_id=${userId}`);
+  var data = await client.api.get(`streams?user_id=${userId}`);
   data = data?.data[0];
   if (!data) return;
   let title = data.title;
@@ -23,6 +25,9 @@ client.eventSub.on('live', async event => {
     else user = client.users.cache.get(pair.d);
   }
   if (user == undefined) return;
+  let image = data.thumbnail_url;
+  image = image.replace('{width}', '400');
+  image = image.replace('{height}', '300');
 
   const embed = new EmbedBuilder();
   embed
@@ -32,7 +37,12 @@ client.eventSub.on('live', async event => {
     })
     .setThumbnail(user.displayAvatarURL())
     .setTitle(title)
-    .setURL(url);
+    .setURL(url)
+    .setImage(image)
+    .addFields(
+      { name: 'Game', value: data.game_name },
+      { name: 'Viewers', value: data.viewer_count }
+    );
 
   /** @type {?TextChannel} */
   const channel = await client.channels.fetch(client.config.channel_id);
@@ -42,12 +52,6 @@ client.eventSub.on('live', async event => {
     content: `How're you doing <@1103947748698505269>, ${username} is currently live`,
     embeds: [embed.data]
   });
-});
-
-client.eventSub.on('raw', packet => {
-  let metadata = packet.metadata;
-  let payload = packet.payload;
-  console.log({ metadata, payload });
 });
 
 client.loadCommands();
