@@ -23,7 +23,7 @@ module.exports = class EventSub extends EventEmitter {
 
       ws.onopen = this.onOpen.bind(this);
       ws.onmessage = this.onMessage.bind(this);
-    })
+    });
   }
 
   onOpen() {
@@ -79,11 +79,11 @@ module.exports = class EventSub extends EventEmitter {
       }
     }
 
-    let res = await post('eventsub/subscriptions', headers, body);
+    let res = await post('eventsub/subscriptions', headers, body, true);
 
     if (typeof res == 'string') { console.log(res); return false; }
     else if (res.status == 200) return true;
-    else { console.log(await res.json()); return false; }
+    else { console.log(res); return false; }
   }
 
   debug(msg) {

@@ -2,7 +2,10 @@ const Client = require('./classes/Client');
 const client = new Client();
 const { User, EmbedBuilder, TextChannel } = require('discord.js');
 
+require('./util/backend');
+
 client.eventSub.on('live', async event => {
+  console.log(event);
   const channels = require('./channels.json')
   const username = event.broadcaster_user_name;
   const userId = event.broadcaster_user_id;
@@ -32,7 +35,7 @@ client.eventSub.on('live', async event => {
     .setURL(url);
 
   /** @type {?TextChannel} */
-  const channel = client.channels.cache.get(client.config.channel_id);
+  const channel = await client.channels.fetch(client.config.channel_id);
   if (channel == undefined) return console.log(`For some reason I can't resolve the channel`);
 
   channel.send({
@@ -41,6 +44,13 @@ client.eventSub.on('live', async event => {
   });
 });
 
+client.eventSub.on('raw', packet => {
+  let metadata = packet.metadata;
+  let payload = packet.payload;
+  console.log({ metadata, payload });
+});
+
 client.loadCommands();
 client.loadEvents();
 client.login(client.config.token);
+client.eventSub.connect();
