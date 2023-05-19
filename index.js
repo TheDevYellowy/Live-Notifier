@@ -1,6 +1,7 @@
 console.clear();
 
 const Client = require('./classes/Client');
+const channels = require('./channels.json').channels;
 const client = new Client();
 const { User, EmbedBuilder, TextChannel } = require('discord.js');
 
@@ -8,7 +9,7 @@ require('./util/backend');
 
 client.eventSub.on('live', async event => {
   console.log(event);
-  const channels = require('./channels.json')
+  const channels = require('./channels.json');
   const username = event.broadcaster_user_name;
   const userId = event.broadcaster_user_id;
   const url = `https://twitch.tv/${username}`;
@@ -22,7 +23,7 @@ client.eventSub.on('live', async event => {
   let user;
   for (const pair of channels.channels) {
     if (pair.t != userId) { }
-    else user = client.users.cache.get(pair.d);
+    else user = await client.users.fetch(pair.d);
   }
   if (user == undefined) return;
   let image = data.thumbnail_url;
@@ -53,6 +54,14 @@ client.eventSub.on('live', async event => {
     embeds: [embed.data]
   });
 });
+
+client.eventSub.on('online', () => {
+  channels.forEach(async (v, i) => {
+    await client.eventSub.subscribe('stream.online', '1', {
+      "broadcaster_user_id": v.t
+    });
+  });
+})
 
 client.loadCommands();
 client.loadEvents();
