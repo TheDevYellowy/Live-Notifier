@@ -36,12 +36,16 @@ async function post(url, headers, data, auth = true) {
     body: JSON.stringify(data)
   });
 
-  if (res.status == 401) return `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${config.twitch.client_id}&redirect_uri=http://localhost/api&scope=`;
+  if (res.status == 401 && !config.twitch.refresh_token) return `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${config.twitch.client_id}&redirect_uri=http://localhost/api&scope=`;
+  else if (res.status == 401) {
+    config = await resetToken();
+    return post(url, headers, data, auth);
+  }
   return await res.json();
 }
 
 async function resetToken() {
-  const res = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${config.twitch.client_id}&client_secret=${config.twitch.client_secoauret}&grant_type=refresh_token&refresh_token=${config.twitch.refresh_token}`, {
+  const res = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${config.twitch.client_id}&client_secret=${config.twitch.client_secret}&grant_type=refresh_token&refresh_token=${config.twitch.refresh_token}`, {
     method: "POST",
     headers: {
       "Content-Type": "x-www-form-urlencoded"
@@ -56,6 +60,9 @@ async function resetToken() {
     config.twitch.refresh_token = data.refresh_token;
     expires = config.twitch.expires_in = (Date.now() + (data.expires_in * 1000));
     fs.writeFileSync(`${process.cwd()}/config.json`, JSON.stringify(config, null, 2));
+  } else {
+    data = await res.json();
+    console.log(data);
   }
   return config;
 }

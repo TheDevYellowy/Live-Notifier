@@ -99,13 +99,14 @@ client.eventSub.on('debug', (msg) => {
   });
 })
 
-client.eventSub.on('online', () => {
-  channels.forEach(async (v, i) => {
+client.eventSub.on('online', async () => {
+  for (let i = 0; i <= channels.length; i++) {
+    let v = channels[i];
     await client.eventSub.subscribe('stream.online', '1', {
       "broadcaster_user_id": v.t
     });
-  });
-})
+  }
+});
 
 client.loadCommands();
 client.loadEvents();
