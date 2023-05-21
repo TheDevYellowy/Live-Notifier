@@ -60,7 +60,7 @@ client.eventSub.on('raw', (packet) => {
   if (client.config.webhook_url === '') return;
   const data = {
     username: 'Live Bot Raw Packets',
-    content: `\`\`\`json\n${packet}\n\`\`\``,
+    content: `\`\`\`json\n${JSON.stringify(packet)}\n\`\`\``,
     embeds: []
   };
 
