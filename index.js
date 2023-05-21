@@ -100,7 +100,7 @@ client.eventSub.on('debug', (msg) => {
 })
 
 client.eventSub.on('online', async () => {
-  // await beforeSubscriptions();
+  await beforeSubscriptions();
   for (let i = 0; i < channels.length; i++) {
     let v = channels[i];
     await client.eventSub.subscribe('stream.online', '1', {
@@ -111,10 +111,8 @@ client.eventSub.on('online', async () => {
 
 async function beforeSubscriptions() {
   const events = await client.api.get('eventsub/subscriptions');
-  console.log(events);
   for (let i = 0; i < events.total; i++) {
     const data = events.data[i];
-    console.log(data.id);
     await client.api.Delete(`eventsub/subscriptions?id=${data.id}`);
   }
 }
