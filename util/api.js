@@ -17,7 +17,7 @@ async function get(url) {
   if (res.status == 401 && !config.twitch.refresh_token) return `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${config.twitch.client_id}&redirect_uri=http://localhost/api&scope=`;
   else if (res.status == 401) {
     config = await resetToken();
-    return post(url, headers, data, auth);
+    return get(url);
   }
   return await res.json();
 }
@@ -61,7 +61,7 @@ async function Delete(url) {
   if (res.status == 401 && !config.twitch.refresh_token) return `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${config.twitch.client_id}&redirect_uri=http://localhost/api&scope=`;
   else if (res.status == 401) {
     config = await resetToken();
-    return post(url, headers, data, auth);
+    return Delete(url);
   }
   else console.log(json); return json;
 }
