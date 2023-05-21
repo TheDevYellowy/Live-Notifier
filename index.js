@@ -55,6 +55,49 @@ client.eventSub.on('live', async event => {
   });
 });
 
+client.eventSub.on('raw', (packet) => {
+  if (packet.metadata.message_type === 'session_keepalive') return;
+  if (client.config.webhook_url === '') return;
+  const data = {
+    username: 'Live Bot Raw Packets',
+    content: `\`\`\`json\n${packet}\n\`\`\``,
+    embeds: []
+  };
+
+  fetch(client.config.webhook_url, {
+    method: "POST",
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }).then(async (res) => {
+    if (!res.ok) {
+      let d = await res.json();
+      console.log(d);
+    }
+  });
+});
+
+client.eventSub.on('debug', (msg) => {
+  if (client.config.webhook_url === '') return;
+
+  fetch(client.config.webhook_url, {
+    method: 'POST',
+    body: JSON.stringify({
+      username: 'Live Bot Debug',
+      content: msg
+    }),
+    headers: {
+      'Content-Type': "application/json"
+    }
+  }).then(async (res) => {
+    if (!res.ok) {
+      let d = await res.json();
+      console.log(d);
+    }
+  });
+})
+
 client.eventSub.on('online', () => {
   channels.forEach(async (v, i) => {
     await client.eventSub.subscribe('stream.online', '1', {
