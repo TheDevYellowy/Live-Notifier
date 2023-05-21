@@ -14,7 +14,11 @@ async function get(url) {
     }
   });
 
-  if (res.status == 401) return 'Access token invalid'
+  if (res.status == 401 && !config.twitch.refresh_token) return `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${config.twitch.client_id}&redirect_uri=http://localhost/api&scope=`;
+  else if (res.status == 401) {
+    config = await resetToken();
+    return post(url, headers, data, auth);
+  }
   return await res.json();
 }
 
@@ -44,6 +48,24 @@ async function post(url, headers, data, auth = true) {
   return await res.json();
 }
 
+async function Delete(url) {
+  if (Date.now() > expires) config = await resetToken();
+  const res = await fetch(`${baseURL}${url}`, {
+    method: "DELETE",
+    headers: {
+      'Authorization': `Bearer ${config.twitch.access_token}`,
+      'Client-Id': config.twitch.client_id
+    }
+  });
+  let json = await res.json();
+  if (res.status == 401 && !config.twitch.refresh_token) return `https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=${config.twitch.client_id}&redirect_uri=http://localhost/api&scope=`;
+  else if (res.status == 401) {
+    config = await resetToken();
+    return post(url, headers, data, auth);
+  }
+  else console.log(json); return json;
+}
+
 async function resetToken() {
   const res = await fetch(`https://id.twitch.tv/oauth2/token?client_id=${config.twitch.client_id}&client_secret=${config.twitch.client_secret}&grant_type=refresh_token&refresh_token=${config.twitch.refresh_token}`, {
     method: "POST",
@@ -67,4 +89,4 @@ async function resetToken() {
   return config;
 }
 
-module.exports = { post, get };
+module.exports = { post, get, Delete };

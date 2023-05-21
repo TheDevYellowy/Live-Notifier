@@ -80,7 +80,7 @@ client.eventSub.on('raw', (packet) => {
 
 client.eventSub.on('debug', (msg) => {
   if (client.config.webhook_url === '') return;
-  if (typeof msg === 'object') msg = JSON.stringify(msg, null, 2);
+  if (typeof msg === 'object') msg = `\`\`\`json\n${JSON.stringify(msg, null, 2)}\n\`\`\``;
 
   fetch(client.config.webhook_url, {
     method: 'POST',
@@ -100,13 +100,24 @@ client.eventSub.on('debug', (msg) => {
 })
 
 client.eventSub.on('online', async () => {
-  for (let i = 0; i <= channels.length; i++) {
+  // await beforeSubscriptions();
+  for (let i = 0; i < channels.length; i++) {
     let v = channels[i];
     await client.eventSub.subscribe('stream.online', '1', {
       "broadcaster_user_id": v.t
     });
   }
 });
+
+async function beforeSubscriptions() {
+  const events = await client.api.get('eventsub/subscriptions');
+  console.log(events);
+  for (let i = 0; i < events.total; i++) {
+    const data = events.data[i];
+    console.log(data.id);
+    await client.api.Delete(`eventsub/subscriptions?id=${data.id}`);
+  }
+}
 
 client.loadCommands();
 client.loadEvents();
