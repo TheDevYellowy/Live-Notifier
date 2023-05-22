@@ -5,6 +5,8 @@ const channels = require('./channels.json').channels;
 const client = new Client();
 const { User, EmbedBuilder, TextChannel } = require('discord.js');
 
+const sleep = require('node:util').promisify(setTimeout);
+
 require('./util/backend');
 require('./antiCrash')(client);
 
@@ -115,6 +117,7 @@ async function beforeSubscriptions() {
   for (let i = 0; i < events.total; i++) {
     const data = events.data[i];
     await client.api.Delete(`eventsub/subscriptions?id=${data.id}`);
+    await sleep(500);
   }
 }
 
