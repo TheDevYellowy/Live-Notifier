@@ -6,6 +6,7 @@ const client = new Client();
 const { User, EmbedBuilder, TextChannel } = require('discord.js');
 
 require('./util/backend');
+require('./antiCrash')(client);
 
 client.eventSub.on('live', async event => {
   console.log(event);
