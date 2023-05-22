@@ -1,7 +1,7 @@
 module.exports = (client) => {
   process.on('unhandledRejection', (r, p) => {
     const data = {
-      username: 'Live Bot Error',
+      username: 'Live Bot unhandledRejection',
       content: `\`\`\`\n${r}\n\n${p}\n\`\`\``,
       embeds: []
     };
@@ -22,7 +22,7 @@ module.exports = (client) => {
 
   process.on('uncaughtException', (e, o) => {
     const data = {
-      username: 'Live Bot Error',
+      username: 'Live Bot uncaughtException',
       content: `\`\`\`\n${e}\n\n${o}\n\`\`\``,
       embeds: []
     };
@@ -43,7 +43,7 @@ module.exports = (client) => {
 
   process.on('uncaughtExceptionMonitor', (e, o) => {
     const data = {
-      username: 'Live Bot Error',
+      username: 'Live Bot uncaughtExceptionMonitor',
       content: `\`\`\`\n${e}\n\n${o}\n\`\`\``,
       embeds: []
     };
@@ -64,7 +64,7 @@ module.exports = (client) => {
 
   process.on('multipleResolves', (t, p, v) => {
     const data = {
-      username: 'Live Bot Error',
+      username: 'Live Bot multipleResolves',
       content: `\`\`\`\n${t}\n${p}\n${v}\n\`\`\``,
       embeds: []
     };
