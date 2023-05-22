@@ -82,25 +82,4 @@ module.exports = (client) => {
       }
     });
   });
-
-  client.on('error', (error) => {
-    const data = {
-      username: 'Live Bot Error',
-      content: `\`\`\`\n${error.message}\n\`\`\``,
-      embeds: []
-    };
-
-    fetch(client.config.webhook_url, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then(async (res) => {
-      if (!res.ok) {
-        let d = await res.json();
-        console.log(d);
-      }
-    });
-  });
 }

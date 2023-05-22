@@ -13,10 +13,13 @@ module.exports = class EventSub extends EventEmitter {
     this.id = null;
   }
 
-  connect() {
+  connect(url = null) {
+    let connectURL;
     if (this.connection?.readyState == WebSocket.OPEN) return Promise.resolve();
 
-    const connectURL = 'wss://eventsub.wss.twitch.tv/ws';
+    if (url == null) connectURL = 'wss://eventsub.wss.twitch.tv/ws';
+    else connectURL = url;
+
     return new Promise((resolve, reject) => {
       this.connectedAt = Date.now();
       const ws = this.connection = new WebSocket(connectURL);
@@ -53,7 +56,8 @@ module.exports = class EventSub extends EventEmitter {
     }
 
     if (packet.metadata.message_type == 'session_reconnect') {
-      this.connection = new WebSocket(packet.payload.session.reconnect_url);
+      await this.connection.close();
+      this.connect(packet.payload.session.reconnect_url);
     }
 
     switch (packet.metadata?.subscription_type) {
