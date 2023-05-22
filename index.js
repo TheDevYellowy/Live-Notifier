@@ -11,7 +11,6 @@ require('./util/backend');
 require('./antiCrash')(client);
 
 client.eventSub.on('live', async event => {
-  console.log(event);
   const channels = require('./channels.json');
   const username = event.broadcaster_user_name;
   const userId = event.broadcaster_user_id;
