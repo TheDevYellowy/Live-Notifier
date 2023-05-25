@@ -61,25 +61,4 @@ module.exports = (client) => {
       }
     });
   });
-
-  process.on('multipleResolves', async (t, p, v) => {
-    const data = {
-      username: 'Live Bot multipleResolves',
-      content: `\`\`\`\nType: ${t}\nPromise: ${p}\nReason: ${v}\n\`\`\``,
-      embeds: []
-    };
-
-    fetch(client.config.webhook_url, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    }).then(async (res) => {
-      if (!res.ok) {
-        let d = await res.json();
-        console.log(d);
-      }
-    });
-  });
 }
