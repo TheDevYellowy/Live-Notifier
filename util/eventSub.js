@@ -56,8 +56,29 @@ module.exports = class EventSub extends EventEmitter {
     }
 
     if (packet.metadata.message_type == 'session_reconnect') {
-      await this.connection.close();
-      this.connect(packet.payload.session.reconnect_url);
+      const ws = new WebSocket(packet.payload.session.reconnect_url);
+      this.connectedAt = Date.now();
+      ws.on('message', async (data) => {
+        let raw;
+        if (data instanceof ArrayBuffer) data = new Uint8Array(data);
+        raw = data;
+        if (typeof raw !== 'string') raw = td.decode(raw);
+        let packet = JSON.parse(raw);
+
+        if (packet.metadata.message_type == 'session_welcome') {
+          await this.connection.close();
+          this.connection = ws;
+          this.id = packet.payload.session.id
+          this.emit('online');
+
+          ws.off('message');
+
+          ws.onopen = this.onOpen.bind(this);
+          ws.onmessage = this.onMessage.bind(this);
+
+          this.onOpen();
+        }
+      });
     }
 
     switch (packet.metadata?.subscription_type) {
